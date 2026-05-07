@@ -1,8 +1,14 @@
 name: CI workflow
+
+on:
+  push:
   
 jobs:
   build:
     runs-on: ubantu-latest
     steps: 
+        - name: checkout code
         - uses : actions/checkout@v4
-        
+
+        - name: setup Docker
+          uses: Docker/setup-build-actions@v4
