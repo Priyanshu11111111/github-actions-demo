@@ -1,14 +1,16 @@
-name: CI workflow
+name: CI Workflow
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
@@ -20,19 +22,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Docker Build and Push
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest
 
-      - name: Run Docker Container
+      - name: Verify Docker Image
         run: |
-          docker run -d \
-          -p 3000:3001 \
-          --name skillpulse-container \
-          ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest   
-          
-      - name: Check Running Containers
-        run: docker ps    
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest
+          docker images
