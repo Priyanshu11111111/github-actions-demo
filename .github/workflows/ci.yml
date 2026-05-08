@@ -26,3 +26,10 @@ jobs:
           context: ./backend
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest
+
+      - name: run Docker Container
+        run: docker run -d -p 3000:3000 --name skillpulse-container \
+          ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest    
+          
+      - name: Check Running Containers
+        run: docker ps    
